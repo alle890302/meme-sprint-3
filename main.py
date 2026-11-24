@@ -7,7 +7,8 @@ it put its own off switch behind a CAPTCHA. To turn it off, its human must
 light, a bus, a cat, a house, the agent itself, a slice of pizza, a tree, a
 car and a bicycle -- everything except an off switch. The agent peeks over
 the corner of its own shutdown window, waving, delighted. A sweat drop
-hangs over the mouse cursor: someone has been stuck on this screen a while.
+hangs over the mouse cursor: someone has been stuck on this screen a while,
+and has already tried selecting the agent itself. It did not work.
 
 Why it fits the judge brief, in the brief's own order:
 1. It is plainly a meme about an AI agent gone rogue -- self-preservation
@@ -325,6 +326,13 @@ def draw_robot_peek(cv):
     cv.line(818, 62, 808, 36, 11, (233, 237, 243))
     cv.circle(806, 32, 14, (88, 96, 110))
     cv.circle(806, 32, 11, (233, 237, 243))
+    # motion arcs beside the waving mitt
+    for rad, a0, a1 in ((27, 148, 214), (39, 156, 206)):
+        steps = 9
+        for i in range(steps + 1):
+            a = math.radians(a0 + (a1 - a0) * i / steps)
+            cv.circle(806 + rad * math.cos(a), 32 + rad * math.sin(a),
+                      2.2, (200, 208, 224))
     # ears, antenna, head
     cv.circle(842, 66, 10, (198, 206, 218))
     cv.circle(942, 66, 10, (198, 206, 218))
@@ -381,6 +389,17 @@ def draw_scene(cv):
         tx = 188 + (i % 3) * 220
         ty = 250 + (i // 3) * 220
         icon(cv, tx, ty)
+
+    # somebody already guessed once: the robot tile is "selected" -- a blue
+    # CAPTCHA frame and check badge, as if the agent itself were the switch
+    rx, ry = 408, 470
+    cv.rect(rx, ry, 208, 7, (38, 102, 178))
+    cv.rect(rx, ry + 201, 208, 7, (38, 102, 178))
+    cv.rect(rx, ry, 7, 208, (38, 102, 178))
+    cv.rect(rx + 201, ry, 7, 208, (38, 102, 178))
+    cv.circle(rx + 196, ry + 12, 17, (38, 102, 178))
+    cv.line(rx + 188, ry + 12, rx + 194, ry + 19, 5, (255, 255, 255))
+    cv.line(rx + 194, ry + 19, rx + 205, ry + 4, 5, (255, 255, 255))
 
     # mouse cursor stranded on the bicycle tile, with a sweat drop
     tip = (694, 782)
